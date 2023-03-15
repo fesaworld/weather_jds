@@ -14,8 +14,8 @@ class ProvModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    if (this.provinsi != null) {
-      data['provinsi'] = this.provinsi!.map((v) => v.toJson()).toList();
+    if (provinsi != null) {
+      data['provinsi'] = provinsi!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -34,8 +34,8 @@ class Provinsi {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = this.id;
-    data['nama'] = this.nama;
+    data['id'] = id;
+    data['nama'] = nama;
     return data;
   }
 }
