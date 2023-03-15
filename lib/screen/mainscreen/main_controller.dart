@@ -1,9 +1,11 @@
+import 'package:weather_jds/data/model/city_model.dart';
 import 'package:weather_jds/data/model/prov_model.dart';
 
 import '../../base/base_controller.dart';
 
 class MainController extends BaseController {
   ProvModel? provModel;
+  CityModel? cityModel;
 
   String? selectedProvId;
   String? selectedProv;
@@ -34,4 +36,17 @@ class MainController extends BaseController {
       print('Data Provinsi gagal diambil');
     }
   }
+
+  Future getCity(String idProv) async {
+    try {
+      var response = await repository.cityGet(idProv);
+      cityModel = response;
+      update();
+      return response;
+    } catch (e) {
+      print(e);
+      print('Data Kabupaten/kota gagal diambil');
+    }
+  }
+
 }

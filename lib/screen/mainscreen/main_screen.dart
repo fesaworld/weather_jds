@@ -62,10 +62,11 @@ class MainScreen extends StatelessWidget {
                                   print(data.id.toString());
                                   print(data.nama.toString());
 
-                                  controller.selectedProvId =
-                                      data.id.toString();
-                                  controller.selectedProv =
-                                      data.nama;
+                                  controller.selectedProvId = data.id.toString();
+                                  controller.selectedProv = data.nama;
+
+                                  controller.getCity(controller.selectedProvId.toString());
+
                                 }else if (value == null) {
                                   controller.selectedProvId = null;
                                   controller.selectedProv = null;
@@ -80,7 +81,10 @@ class MainScreen extends StatelessWidget {
                                 ? false
                                 : true,
                             onClear: () {
-                              // controller.distModel = null;
+                              controller.cityModel = null;
+                              controller.selectedCityId = null;
+                              controller.selectedCity = null;
+
                               controller.selectedProvId = null;
                               controller.selectedProv = null;
                               controller.update();
@@ -134,13 +138,43 @@ class MainScreen extends StatelessWidget {
                             height: 5,
                           ),
                           SearchChoices.single(
-                            items: const [],
+                            items: controller.cityModel != null
+                                ? controller.cityModel!.kotaKabupaten!
+                                .map((item) =>
+                                DropdownMenuItem<String>(
+                                  value: item.nama,
+                                  child: Text(
+                                      item.nama
+                                          .toString(),
+                                      style: GoogleFonts.karla(fontSize: 12, fontWeight: FontWeight.w300)),
+                                ))
+                                .toList()
+                                : const [],
                             value: controller.selectedCity,
                             hint: "Pilih Kabupaten/Kota",
-                            style: GoogleFonts.karla(fontSize: 12, fontWeight: FontWeight.w300),
-                            onChanged: (value) { },
+                            style: GoogleFonts.karla(fontSize: 12, fontWeight: FontWeight.w300, color: Colors.black),
+                            onChanged: (value) {
+                              for (var data in controller
+                                  .cityModel!.kotaKabupaten!) {
+                                if (value != null &&
+                                    value == data.nama) {
+                                  print(data.id.toString());
+                                  print(data.nama.toString());
+                                  controller.selectedCityId = data.id.toString();
+                                  controller.selectedCity = data.nama;
+                                } else if (value == null) {
+                                  controller.selectedCityId = null;
+                                  controller.selectedCity = null;
+                                }
+                              }
+                              controller.update();
+                            },
                             dialogBox: false,
                             isExpanded: true,
+                            displayClearIcon:
+                            controller.selectedCity == null
+                                ? false
+                                : true,
                             menuConstraints: BoxConstraints.tight(
                                 const Size.fromHeight(350)),
                             icon: const Icon(
