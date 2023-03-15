@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:weather_jds/screen/mainscreen//main_controller.dart';
+import 'package:weather_jds/screen/mainscreen/main_controller.dart';
 
 
 class MainScreen extends StatelessWidget {
