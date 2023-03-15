@@ -19,7 +19,7 @@ class MainScreen extends StatelessWidget {
           ),
           body: SafeArea(
             child: Container(
-              height: Get.height,
+              height: Get.height * 0.9,
               width: Get.width,
               padding: EdgeInsets.all(12),
               child: SingleChildScrollView(
@@ -41,14 +41,50 @@ class MainScreen extends StatelessWidget {
                             height: 5,
                           ),
                           SearchChoices.single(
-                            items: const [],
+                            items: controller.provModel != null
+                                ? controller.provModel!.provinsi!
+                                    .map((item) =>
+                                        DropdownMenuItem<String>(
+                                          value: item.nama,
+                                          child: Text(
+                                              item.nama
+                                                  .toString(),
+                                              style: GoogleFonts.karla(fontSize: 12, fontWeight: FontWeight.w300)),
+                                        ))
+                                .toList()
+                                : const [],
                             value: controller.selectedProv,
                             hint: "Pilih Provinsi",
-                            style: GoogleFonts.karla(fontSize: 12, fontWeight: FontWeight.w300),
-                            onChanged: (value) {},
+                            style: GoogleFonts.karla(fontSize: 12, fontWeight: FontWeight.w300, color: Colors.black),
+                            onChanged: (value) {
+                              for (var data in controller.provModel!.provinsi!) {
+                                if (value != null && value == data.nama){
+                                  print(data.id.toString());
+                                  print(data.nama.toString());
+
+                                  controller.selectedProvId =
+                                      data.id.toString();
+                                  controller.selectedProv =
+                                      data.nama;
+                                }else if (value == null) {
+                                  controller.selectedProvId = null;
+                                  controller.selectedProv = null;
+                                }
+                              }
+                              controller.update();
+                            },
                             dialogBox: false,
                             isExpanded: true,
-                            onClear: () { },
+                            displayClearIcon:
+                            controller.selectedProv == null
+                                ? false
+                                : true,
+                            onClear: () {
+                              // controller.distModel = null;
+                              controller.selectedProvId = null;
+                              controller.selectedProv = null;
+                              controller.update();
+                            },
                             menuConstraints: BoxConstraints.tight(
                                 const Size.fromHeight(350)),
                             icon: const Icon(
@@ -151,6 +187,7 @@ class MainScreen extends StatelessWidget {
           bottomSheet: Container(
             padding: EdgeInsets.all(15),
             width: Get.width,
+            height: Get.height * 0.1,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey,
