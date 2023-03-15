@@ -1,7 +1,13 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:weather_jds/data/model/city_model.dart';
 import 'package:weather_jds/data/model/prov_model.dart';
 
 import '../../base/base_controller.dart';
+import '../../widget/dialog/exception_dialog_widget.dart';
+import '../../widget/dialog/loading_dialog_widget.dart';
 
 class MainController extends BaseController {
   ProvModel? provModel;
@@ -12,10 +18,16 @@ class MainController extends BaseController {
   String? selectedCityId;
   String? selectedCity;
 
+  late BuildContext context;
+  bool isException = false;
+
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+
+    context = Get.context!;
+
     getProv();
   }
 
@@ -47,6 +59,47 @@ class MainController extends BaseController {
       print(e);
       print('Data Kabupaten/kota gagal diambil');
     }
+  }
+
+  void exceptionDialog(BuildContext context, String message){
+    showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => ExceptionDialogWidget(
+          message: message,
+          onPressed: () {
+            Navigator.pop(context, 'close');
+
+            isException = false;
+            update();
+
+          },
+        )
+    );
+  }
+
+  void loadingDialog(BuildContext context){
+    showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => const LoadingDialogWidget()
+    );
+  }
+
+  void submit() async{
+    if (selectedCity == null || selectedProv == null){
+      String message = 'Pilih provinsi & Kabupaten/Kota';
+      exceptionDialog(context, message);
+    }else{
+      loadingDialog(context);
+      print('Provinsi = ${selectedProv}');
+      print('Kabupaten/Kota = ${selectedCity}');
+
+      Timer(const Duration(seconds: 3), () async {
+        Navigator.pop(context, 'close');
+        String message = 'Terjadi masalah saat mendapatkan data cuaca';
+        exceptionDialog(context, message);
+      });
+    }
+
   }
 
 }
