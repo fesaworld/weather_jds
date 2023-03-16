@@ -8,6 +8,7 @@ import 'package:weather_jds/data/model/prov_model.dart';
 import '../../base/base_controller.dart';
 import '../../widget/dialog/exception_dialog_widget.dart';
 import '../../widget/dialog/loading_dialog_widget.dart';
+import '../weatherscreen/weather_screen.dart';
 
 class MainController extends BaseController {
   ProvModel? provModel;
@@ -95,8 +96,8 @@ class MainController extends BaseController {
 
       Timer(const Duration(seconds: 3), () async {
         Navigator.pop(context, 'close');
-        String message = 'Terjadi masalah saat mendapatkan data cuaca';
-        exceptionDialog(context, message);
+
+        Get.to(() => const WeatherScreen());
       });
     }
 
